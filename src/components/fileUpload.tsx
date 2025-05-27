@@ -34,7 +34,7 @@ function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
       onClientUploadComplete={(res) => {
         // Do something with the response
         onChange(res[0]?.ufsUrl);
-        console.log(res);
+        //console.log(res);
       }}
       onUploadError={(error: Error) => {
         console.log(error);

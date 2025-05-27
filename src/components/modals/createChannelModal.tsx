@@ -18,59 +18,78 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import FileUpload from "../fileUpload";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   onClose,
   selectModalIsOpen,
   selectModalOpenType,
 } from "@/store/features/createModalSlice";
+import { ChannelType } from "@prisma/client";
+import qs from "query-string";
 
-function CreateServerModal() {
+function CreateChannelModal() {
   const formSchema = z.object({
-    name: z.string().min(1, {
-      message: "server name is required",
-    }),
-    // imageUrl: z.string().min(1, {
-    //   message: "image is required",
-    // }),
-    imageUrl: z.string().optional(),
+    name: z
+      .string()
+      .min(1, {
+        message: "server name is required",
+      })
+      .refine((name) => name !== "general", {
+        message: "Channel name cannot be 'general'",
+      }),
+    type: z.nativeEnum(ChannelType),
   });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      imageUrl: "",
+      type: ChannelType.TEXT,
     },
   });
 
   const isLoading = form.formState.isSubmitting;
   const router = useRouter();
+  const params = useParams();
   // const isOpen = useIsModalOpen();
   // const handleClose = useHandleModalClose();
   const openType = useAppSelector(selectModalOpenType);
   const isOpen =
-    useAppSelector(selectModalIsOpen) && openType === "createServer";
+    useAppSelector(selectModalIsOpen) && openType === "createChannel";
   const dispatch = useAppDispatch();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await axios.post("/api/servers", values);
+      const url = qs.stringifyUrl({
+        url: "/api/channels",
+        query: {
+          serverId: params?.serverId,
+        },
+      });
+      await axios.post(url, values);
 
       form.reset();
       router.refresh();
-      // close the modal
       dispatch(onClose());
+      console.log(form);
     } catch (err) {
       console.error(err);
     }
-  };
+  }
+
   const handleClose = () => {
     dispatch(onClose());
   };
@@ -80,32 +99,15 @@ function CreateServerModal() {
       <DialogContent className="bg-white text-black overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Customize your server
+            Create Your Channel
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Give it a name and image, you can always change it later
+            Give it a name , you can always change it later
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-8">
-              <div className="flex items-center justify-center text-center">
-                <FormField
-                  control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FileUpload
-                          endpoint="serverImage"
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
               <FormField
                 control={form.control}
                 name="name"
@@ -118,10 +120,41 @@ function CreateServerModal() {
                       <Input
                         disabled={isLoading}
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Enter server name"
+                        placeholder="Enter the channel name"
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                      Choose channel type
+                    </FormLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 capitalize outline-none">
+                          <SelectValue placeholder="Choose a type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent {...field}>
+                        {Object.values(ChannelType).map((type) => (
+                          <SelectItem
+                            key={type}
+                            value={type}
+                            className="capitalize"
+                          >
+                            {type.toLocaleLowerCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -139,4 +172,4 @@ function CreateServerModal() {
   );
 }
 
-export default CreateServerModal;
+export default CreateChannelModal;

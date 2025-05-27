@@ -12,6 +12,11 @@ export const makeStore = () => {
     reducer: {
       modal: modalReducer,
     },
+    //TODO: 当所有的序列化和反序列化完成时，删除此项。for redux
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false, // 不推荐禁用
+      }),
   });
 };
 

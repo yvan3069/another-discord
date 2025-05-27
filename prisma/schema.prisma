@@ -12,6 +12,7 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  
 }
 model Profile {
   id String @id @default(uuid())
@@ -32,7 +33,7 @@ model Server {
   id String @id @default(uuid())
   name String
   imageUrl String @db.Text
-  inviteCode String @db.Text
+  inviteCode String @unique
 
   profileId String
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -42,6 +43,8 @@ model Server {
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+
+  @@index([profileId]) // <--- 添加索引
 }
 
 model Member {
@@ -56,6 +59,10 @@ model Member {
 
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+
+  @@index([profileId]) // <--- 添加索引
+  @@index([serverId])  // <--- 添加索引
+  @@index([role])      // <--- 为排序字段添加索引 (如果经常按 role 排序)
 }
 
 enum MemberRole {
@@ -79,4 +86,9 @@ model Channel {
 
   serverId String
   server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  @@index([profileId]) // <--- 添加索引
+  @@index([serverId])  // <--- 添加索引
+  @@index([name])      // <--- 为排序字段添加索引 (如果你按 name 排序)
+  // @@index([createdAt]) // <--- 或者按 createdAt 排序
 }

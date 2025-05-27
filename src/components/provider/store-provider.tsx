@@ -5,6 +5,12 @@ import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "@/store/store";
 import CreateServerModal from "@/components/modals/createServerModal";
+import InviteModal from "@/components/modals/inviteModal";
+import EditServerModal from "@/components/modals/editServerModal";
+import MembersModal from "@/components/modals/members-modal";
+import CreateChannelModal from "@/components/modals/createChannelModal";
+import LeaveServerModal from "../modals/leaveServer";
+import DeleteServerModal from "../modals/deleteServer";
 // 如果需要，导入用于初始化 store 的 action
 // import { initializeData } from '@/store/someSlice';
 
@@ -31,7 +37,13 @@ export default function StoreProvider({
   // 将 store 实例传递给 Redux Provider
   return (
     <Provider store={storeRef.current}>
+      <DeleteServerModal />
+      <LeaveServerModal />
+      <MembersModal />
+      <EditServerModal />
+      <InviteModal />
       <CreateServerModal />
+      <CreateChannelModal />
       {children}
     </Provider>
   );

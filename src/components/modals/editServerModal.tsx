@@ -21,17 +21,20 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+
 import FileUpload from "../fileUpload";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  onClose,
+  selectModalData,
+  selectModalIsOpen,
+  selectModalOpenType,
+} from "@/store/features/createModalSlice";
+import { useEffect } from "react";
 
-function InitialModal() {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
+function EditServerModal() {
   const formSchema = z.object({
     name: z.string().min(1, {
       message: "server name is required",
@@ -51,32 +54,46 @@ function InitialModal() {
 
   const isLoading = form.formState.isSubmitting;
   const router = useRouter();
+  // const isOpen = useIsModalOpen();
+  // const handleClose = useHandleModalClose();
+  const openType = useAppSelector(selectModalOpenType);
+  const isOpen = useAppSelector(selectModalIsOpen) && openType === "editServer";
+  const dispatch = useAppDispatch();
+
+  const data = useAppSelector(selectModalData);
+  const server = data?.server;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/servers", values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
 
       form.reset();
       router.refresh();
-      // TODO: later 判断 window.loaction.reload()是否有用。
-      window.location.reload();
+      // close the modal
+      dispatch(onClose());
     } catch (err) {
       console.error(err);
     }
   };
+  const handleClose = () => {
+    dispatch(onClose());
+  };
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
 
-  // Avoiding Hydration Mismatches
-  if (!isMounted) return null;
-  // TODO: 增加如果不添加图片，无法创建服务器的功能
   return (
-    <Dialog open>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Customize your server
+            Edit your server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Give it a name and image, you can always change it later
+            You can change the image and name of the server here
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -121,7 +138,7 @@ function InitialModal() {
               />
               <DialogFooter className="bg-gray-100 px-1 py-4 ">
                 <Button variant="primary" disabled={isLoading}>
-                  Create
+                  Save
                 </Button>
               </DialogFooter>
             </div>
@@ -132,4 +149,4 @@ function InitialModal() {
   );
 }
 
-export default InitialModal;
+export default EditServerModal;

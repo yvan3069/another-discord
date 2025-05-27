@@ -32,7 +32,7 @@ async function NavigationSidebar() {
       <ScrollArea className="flex-1 w-full">
         {servers.map((server) => (
           <div key={server.id} className="mb-4">
-            {/*TODO 初次点击可能会感觉到延迟 */}
+            {/*TODO 初次点击可能会感觉到延迟, 可以用骨架图 */}
             <NavigationItem
               id={server.id}
               imageUrl={server.imageUrl}
