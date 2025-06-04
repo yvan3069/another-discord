@@ -16,7 +16,6 @@ function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
   // TODO: 判断类型是否为图片/pdf，如果是图片的话，则
   if (value) {
     return (
-      // TODO: decide the best height and weight
       <div className="relative h-40 w-40">
         <Image src={value} fill alt="Upload" className="rounded-full" />
         <button

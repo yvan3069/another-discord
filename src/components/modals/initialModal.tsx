@@ -36,10 +36,10 @@ function InitialModal() {
     name: z.string().min(1, {
       message: "server name is required",
     }),
-    // imageUrl: z.string().min(1, {
-    //   message: "image is required",
-    // }),
-    imageUrl: z.string().optional(),
+    imageUrl: z.string().min(1, {
+      message: "image is required",
+    }),
+    //imageUrl: z.string().optional(),
   });
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -58,7 +58,6 @@ function InitialModal() {
 
       form.reset();
       router.refresh();
-      // TODO: later 判断 window.loaction.reload()是否有用。
       window.location.reload();
     } catch (err) {
       console.error(err);
@@ -67,7 +66,6 @@ function InitialModal() {
 
   // Avoiding Hydration Mismatches
   if (!isMounted) return null;
-  // TODO: 增加如果不添加图片，无法创建服务器的功能
   return (
     <Dialog open>
       <DialogContent className="bg-white text-black overflow-hidden">

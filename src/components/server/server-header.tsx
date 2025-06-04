@@ -65,7 +65,7 @@ function ServerHeader({ server, role }: ServerHeaderProps) {
               );
             }}
           >
-            settings
+            Settings
             <Settings className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
@@ -100,7 +100,6 @@ function ServerHeader({ server, role }: ServerHeaderProps) {
             <PlusCircle className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {/* TODO: separator is ligth and not very visiable */}
         {isMonderator && <DropdownMenuSeparator />}
         {isAdmin && (
           <DropdownMenuItem

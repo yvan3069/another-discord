@@ -61,7 +61,6 @@ function InviteModal() {
       setCopied(false);
     }, 1000);
   };
-  //TODO: 当不是admin时，取消展示generate new link
   const onNew = async () => {
     try {
       setIsLoading(true);

@@ -10,7 +10,7 @@ export async function PATCH(
     const profile = await currentProfile();
     const { searchParams } = new URL(req.url);
     const { role } = await req.json();
-    console.log(req);
+    //console.log(req);
 
     const serverId = searchParams.get("serverId");
 

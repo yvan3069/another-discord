@@ -11,7 +11,7 @@ interface ServerSectionProps {
   label: string;
   role?: MemberRole;
   sectionType: "channels" | "members";
-  channelType: ChannelType;
+  channelType?: ChannelType;
   server?: ServerWithMembersWithProfiles;
 }
 
@@ -33,7 +33,11 @@ function ServerSection({
         <ActionTooltip label="Create Channel" side="top">
           <button
             className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-            onClick={() => dispatch(onOpen({ openType: "createChannel" }))}
+            onClick={() =>
+              dispatch(
+                onOpen({ openType: "createChannel", channelType: channelType })
+              )
+            }
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -43,7 +47,16 @@ function ServerSection({
         <ActionTooltip label="Manage Members" side="top">
           <button
             className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-            onClick={() => dispatch(onOpen({ openType: "members" }))}
+            onClick={() =>
+              dispatch(
+                onOpen({
+                  openType: "members",
+                  data: {
+                    server: server ? serializeServer(server) : undefined,
+                  },
+                })
+              )
+            }
           >
             <Settings className="h-4 w-4" />
           </button>

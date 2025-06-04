@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
-import { Member, Profile, Server } from "@prisma/client";
+import { Channel, ChannelType, Member, Profile, Server } from "@prisma/client";
 import { ServerWithMembersWithProfiles } from "@/type";
 
 //import { ServerWithMembersWithProfiles } from "@/type";
@@ -13,6 +13,8 @@ export type OpenModalType =
   | "createChannel"
   | "leaveServer"
   | "deleteServer"
+  | "deleteChannel"
+  | "editChannel"
   | null;
 
 // to fit the redux
@@ -56,8 +58,10 @@ interface ModalData {
 
 export type ModalType = {
   openType: OpenModalType;
+  channelType?: ChannelType;
   data?: ModalData;
   isOpen?: boolean;
+  channel?: Channel;
 };
 
 // 使用该类型定义初始 state
@@ -65,6 +69,7 @@ const initialState: ModalType = {
   openType: null,
   isOpen: false,
   data: {},
+  channelType: ChannelType.TEXT,
 };
 
 export const modalSlice = createSlice({
@@ -92,6 +97,7 @@ export const modalSlice = createSlice({
       }
       if (action.payload.openType === "createChannel") {
         state.openType = "createChannel";
+        state.channelType = action.payload?.channelType || ChannelType.TEXT;
       }
       if (action.payload.openType === "leaveServer") {
         state.openType = "leaveServer";
@@ -100,6 +106,14 @@ export const modalSlice = createSlice({
       if (action.payload.openType === "deleteServer") {
         state.openType = "deleteServer";
         state.data = action.payload.data;
+      }
+      if (action.payload.openType === "deleteChannel") {
+        state.openType = "deleteChannel";
+        state.channel = action.payload.channel;
+      }
+      if (action.payload.openType === "editChannel") {
+        state.openType = "editChannel";
+        state.channel = action.payload.channel;
       }
     },
     onClose: (state) => {
@@ -120,5 +134,8 @@ export const { onOpen, onClose } = modalSlice.actions;
 export const selectModalIsOpen = (state: RootState) => state.modal.isOpen;
 export const selectModalOpenType = (state: RootState) => state.modal.openType;
 export const selectModalData = (state: RootState) => state.modal.data;
+export const selectModalChannelType = (state: RootState) =>
+  state.modal.channelType;
+export const selectModalChannel = (state: RootState) => state.modal.channel;
 
 export default modalSlice.reducer;

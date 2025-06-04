@@ -9,8 +9,10 @@ import InviteModal from "@/components/modals/inviteModal";
 import EditServerModal from "@/components/modals/editServerModal";
 import MembersModal from "@/components/modals/members-modal";
 import CreateChannelModal from "@/components/modals/createChannelModal";
-import LeaveServerModal from "../modals/leaveServer";
-import DeleteServerModal from "../modals/deleteServer";
+import LeaveServerModal from "@/components/modals/leaveServer";
+import DeleteServerModal from "@/components/modals/deleteServer";
+import DeleteChannelModal from "@/components/modals/deleteChannelModal";
+import EditChannelModal from "@/components/modals/editChannelModal";
 // 如果需要，导入用于初始化 store 的 action
 // import { initializeData } from '@/store/someSlice';
 
@@ -44,6 +46,8 @@ export default function StoreProvider({
       <InviteModal />
       <CreateServerModal />
       <CreateChannelModal />
+      <DeleteChannelModal />
+      <EditChannelModal />
       {children}
     </Provider>
   );

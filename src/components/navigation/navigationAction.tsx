@@ -12,7 +12,6 @@ function NavigationAction() {
     dispatch(onOpen(type));
   };
   return (
-    // TODO button看起来十分不流畅，让过渡动画更加自然,删除了边角的动画
     <div>
       <ActionTooltip label="create a new server" side="left">
         <button
