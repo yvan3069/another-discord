@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/provider/theme-provider";
 import StoreProvider from "@/components/provider/store-provider"; // 导入新的 Provider
 import { cn } from "@/lib/utils";
 import { clerkPublicKey } from "@/constants";
+import { SocketProvider } from "@/components/provider/socket-provider";
 // 不再需要 useRef, makeStore, AppStore, Provider from react-redux
 
 const font = localFont({
@@ -44,8 +45,10 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="discord-clone"
           >
-            {/* 使用 StoreProvider 包裹 children */}
-            <StoreProvider>{children}</StoreProvider>
+            <SocketProvider>
+              {/* 使用 StoreProvider 包裹 children */}
+              <StoreProvider>{children}</StoreProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -3,6 +3,7 @@ import MobileToggle from "@/components/mobile-toggle";
 import { Profile } from "@prisma/client";
 import db from "@/lib/db";
 import UserAvatar from "../user-avatar";
+import SocketIndicator from "@/components/sokcet-indicator";
 
 interface ChatHeaderProps {
   serverId: string;
@@ -54,6 +55,9 @@ async function ChatHeader({
         <UserAvatar src={imageUrl} className="mr-3" />
       )}
       <p className="font-semibold text-md text-black dark:text-white">{name}</p>
+      <div className="ml-auto flex items-center">
+        <SocketIndicator />
+      </div>
     </div>
   );
 }

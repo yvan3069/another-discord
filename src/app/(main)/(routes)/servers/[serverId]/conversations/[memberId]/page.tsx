@@ -13,10 +13,14 @@ interface MemberIdPageProps {
 }
 
 async function MemberIdPage({ params }: MemberIdPageProps) {
+  console.time("ConversationPage: currentProfile");
   const profile = await currentProfile();
+  console.timeEnd("ConversationPage: currentProfile");
   if (!profile) {
     return <RedirectToSignIn />;
   }
+
+  console.time("ConversationPage: db.member.findFirst");
   const currentMember = await db.member.findFirst({
     where: {
       serverId: params.serverId,
@@ -26,6 +30,7 @@ async function MemberIdPage({ params }: MemberIdPageProps) {
       profile: true,
     },
   });
+  console.timeEnd("ConversationPage: db.member.findFirst");
   if (!currentMember) {
     return redirect("/");
   }
