@@ -5,6 +5,7 @@ import { UploadThingError } from "uploadthing/server";
 
 import { auth } from "@clerk/nextjs/server";
 
+//TODO: 看起来对文件大小有所限制。找到限制源头并添加报错返回信息。
 const f = createUploadthing();
 
 // const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }); // Fake auth function

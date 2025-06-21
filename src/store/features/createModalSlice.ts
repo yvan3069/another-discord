@@ -15,6 +15,8 @@ export type OpenModalType =
   | "deleteServer"
   | "deleteChannel"
   | "editChannel"
+  | "messageFile"
+  | "deleteMessage"
   | null;
 
 // to fit the redux
@@ -62,6 +64,16 @@ export type ModalType = {
   data?: ModalData;
   isOpen?: boolean;
   channel?: Channel;
+  //messageFile
+  apiUrl?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query?: Record<string, any>;
+
+  //deleteMessage
+  socketUrl?: string;
+  messageId?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  socketQuery?: Record<string, any>;
 };
 
 // 使用该类型定义初始 state
@@ -115,11 +127,24 @@ export const modalSlice = createSlice({
         state.openType = "editChannel";
         state.channel = action.payload.channel;
       }
+      if (action.payload.openType === "messageFile") {
+        state.openType = "messageFile";
+        state.apiUrl = action.payload.apiUrl;
+        state.query = action.payload.query;
+      }
+      if (action.payload.openType === "deleteMessage") {
+        state.openType = "deleteMessage";
+        state.socketUrl = action.payload.socketUrl;
+        state.messageId = action.payload.messageId;
+        state.socketQuery = action.payload.socketQuery;
+      }
     },
     onClose: (state) => {
       state.isOpen = false;
       state.openType = null;
       state.data = {}; // Clear data on close
+      state.apiUrl = undefined;
+      state.query = undefined;
     },
     // 使用 PayloadAction 类型声明 `action.payload` 的内容
     // incrementByAmount: (state, action: PayloadAction<number>) => {
@@ -137,5 +162,11 @@ export const selectModalData = (state: RootState) => state.modal.data;
 export const selectModalChannelType = (state: RootState) =>
   state.modal.channelType;
 export const selectModalChannel = (state: RootState) => state.modal.channel;
+export const selectModalApiUrl = (state: RootState) => state.modal.apiUrl;
+export const selectModalQuery = (state: RootState) => state.modal.query;
+export const selectModalSocketUrl = (state: RootState) => state.modal.socketUrl;
+export const selectModalMessageId = (state: RootState) => state.modal.messageId;
+export const selectModalSocketQuery = (state: RootState) =>
+  state.modal.socketQuery;
 
 export default modalSlice.reducer;

@@ -13,6 +13,8 @@ import LeaveServerModal from "@/components/modals/leaveServer";
 import DeleteServerModal from "@/components/modals/deleteServer";
 import DeleteChannelModal from "@/components/modals/deleteChannelModal";
 import EditChannelModal from "@/components/modals/editChannelModal";
+import MessageFileModal from "@/components/modals/messageFileModal";
+import DeleteMessageModal from "@/components/modals/deleteMessageModal";
 // 如果需要，导入用于初始化 store 的 action
 // import { initializeData } from '@/store/someSlice';
 
@@ -48,6 +50,8 @@ export default function StoreProvider({
       <CreateChannelModal />
       <DeleteChannelModal />
       <EditChannelModal />
+      <MessageFileModal />
+      <DeleteMessageModal />
       {children}
     </Provider>
   );

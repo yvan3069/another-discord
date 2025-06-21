@@ -8,6 +8,9 @@ import { Plus, Smile } from "lucide-react";
 import { Input } from "../ui/input";
 import axios from "axios";
 import qs from "query-string";
+import { useAppDispatch } from "@/lib/hooks";
+import { onOpen } from "@/store/features/createModalSlice";
+import EmojiPicker from "../emojiPicker";
 
 interface ChatInputPros {
   apiUrl: string;
@@ -29,18 +32,23 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputPros) {
     },
   });
   const isLoading = form.formState.isSubmitting;
+  const dispatch = useAppDispatch();
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    //console.log(values);
     try {
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
       });
-      //await axios.post(url, values);
+
+      await axios.post(url, values);
       form.reset();
     } catch (err) {
       console.error(err);
     }
+  }
+  function handleOpen() {
+    dispatch(onOpen({ openType: "messageFile", apiUrl, query }));
   }
   return (
     <Form {...form}>
@@ -55,7 +63,9 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputPros) {
                   <button
                     className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition rounded-full p-1 flex items-center justify-center"
                     type="button"
-                    onClick={() => {}}
+                    onClick={() => {
+                      handleOpen();
+                    }}
                   >
                     <Plus className="text-white dark:text-[#313338]" />
                   </button>
@@ -67,7 +77,11 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputPros) {
                     autoComplete="off"
                   />
                   <div className="absolute top-7 right-8">
-                    <Smile />
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value} ${emoji}`)
+                      }
+                    />
                   </div>
                 </div>
               </FormControl>

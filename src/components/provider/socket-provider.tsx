@@ -32,7 +32,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         addTrailingSlash: false,
       }
     );
-    console.log(process.env.NEXT_PUBLIC_SITE_URL);
+    //console.log(process.env.NEXT_PUBLIC_SITE_URL);
     socketInstance.on("connect", () => {
       setIsConnected(true);
     });

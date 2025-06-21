@@ -1,11 +1,10 @@
 // for page router
 import { getAuth } from "@clerk/nextjs/server";
-import { cache } from "react";
 
 import db from "@/lib/db";
 import { NextApiRequest } from "next";
 
-export const currentProfilePage = cache(async (req: NextApiRequest) => {
+export const currentProfilePage = async (req: NextApiRequest) => {
   console.time("CurrentProfilePages: auth");
   const { userId } = getAuth(req);
   console.timeEnd("CurrentProfilePages: auth");
@@ -20,4 +19,4 @@ export const currentProfilePage = cache(async (req: NextApiRequest) => {
   });
   console.timeEnd("CurrentProfilePages: profile");
   return profile;
-});
+};

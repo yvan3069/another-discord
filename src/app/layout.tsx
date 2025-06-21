@@ -9,6 +9,7 @@ import StoreProvider from "@/components/provider/store-provider"; // 导入新�
 import { cn } from "@/lib/utils";
 import { clerkPublicKey } from "@/constants";
 import { SocketProvider } from "@/components/provider/socket-provider";
+import { QueryProvider } from "@/components/provider/query-provider";
 // 不再需要 useRef, makeStore, AppStore, Provider from react-redux
 
 const font = localFont({
@@ -47,7 +48,9 @@ export default function RootLayout({
           >
             <SocketProvider>
               {/* 使用 StoreProvider 包裹 children */}
-              <StoreProvider>{children}</StoreProvider>
+              <StoreProvider>
+                <QueryProvider>{children}</QueryProvider>
+              </StoreProvider>
             </SocketProvider>
           </ThemeProvider>
         </body>

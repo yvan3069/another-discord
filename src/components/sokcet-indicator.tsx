@@ -11,7 +11,9 @@ function SocketIndicator() {
       variant="outline"
       className={cn(
         "text-white, border-none",
-        isConnected ? "bg-emerald-600" : "bg-yellow-600"
+        isConnected
+          ? "bg-emerald-100 dark:bg-emerald-600"
+          : "bg-yellow-100 dark:bg-yellow-600"
       )}
     >
       {isConnected ? "Live: Realtime updates" : "Fallback: Polling every 1s"}
