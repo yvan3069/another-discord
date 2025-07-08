@@ -67,13 +67,13 @@ export type ModalType = {
   //messageFile
   apiUrl?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query?: Record<string, any>;
+  query?: Record<string, string>;
 
   //deleteMessage
   socketUrl?: string;
   messageId?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  socketQuery?: Record<string, any>;
+  socketQuery?: Record<string, string>;
 };
 
 // 使用该类型定义初始 state

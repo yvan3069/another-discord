@@ -10,7 +10,6 @@ import {
 import { useAppSelector } from "@/lib/hooks";
 import {
   onClose,
-  selectModalData,
   selectModalIsOpen,
   selectModalMessageId,
   selectModalOpenType,
@@ -25,7 +24,6 @@ import { Button } from "../ui/button";
 import qs from "query-string";
 
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 function DeleteMessageModal() {
   const [isMounted, setIsMounted] = useState(false);
@@ -40,7 +38,6 @@ function DeleteMessageModal() {
   const socketUrl = useAppSelector(selectModalSocketUrl);
   const messageId = useAppSelector(selectModalMessageId);
   const socketQuery = useAppSelector(selectModalSocketQuery);
-  const router = useRouter();
 
   const handleClose = () => {
     dispatch(onClose());

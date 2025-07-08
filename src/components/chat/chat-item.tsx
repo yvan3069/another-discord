@@ -130,7 +130,6 @@ function ChatItem({
         url: `${socketUrl}/${id}`,
         query: socketQuery,
       });
-      //console.log(socketQuery);
       await axios.patch(url, values);
     } catch (err) {
       console.error(err);

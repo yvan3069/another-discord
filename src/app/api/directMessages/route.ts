@@ -1,5 +1,5 @@
 import { currentProfile } from "@/lib/current-profile";
-import { Message } from "@prisma/client";
+import { DirectMessage, Message } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
@@ -12,25 +12,25 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const cursor = searchParams.get("cursor");
-    const channelId = searchParams.get("channelId");
+    const conversationId = searchParams.get("conversationId");
 
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    if (!channelId) {
+    if (!conversationId) {
       return new NextResponse("Missing ChannelId", { status: 400 });
     }
-    let messages: Message[];
+    let directMessages: DirectMessage[];
 
     if (cursor) {
-      messages = await db.message.findMany({
+      directMessages = await db.directMessage.findMany({
         take: MESSAGE_BATCH,
         skip: 1,
         cursor: {
           id: cursor,
         },
         where: {
-          channelId: channelId,
+          conversationId: conversationId,
         },
         include: {
           member: {
@@ -42,11 +42,11 @@ export async function GET(req: Request) {
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       });
     } else {
-      messages = await db.message.findMany({
+      directMessages = await db.directMessage.findMany({
         take: MESSAGE_BATCH,
 
         where: {
-          channelId: channelId,
+          conversationId: conversationId,
         },
         include: {
           member: {
@@ -61,11 +61,11 @@ export async function GET(req: Request) {
       });
     }
     let nextCursor = null;
-    if (messages.length === MESSAGE_BATCH) {
-      nextCursor = messages[MESSAGE_BATCH - 1].id;
+    if (directMessages.length === MESSAGE_BATCH) {
+      nextCursor = directMessages[MESSAGE_BATCH - 1].id;
     }
     return NextResponse.json({
-      items: messages,
+      items: directMessages,
       nextCursor,
     });
   } catch (err) {

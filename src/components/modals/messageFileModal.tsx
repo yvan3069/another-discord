@@ -126,7 +126,7 @@ function MessageFileModal() {
 
               <DialogFooter className="bg-gray-100 px-1 py-4 ">
                 <Button variant="primary" disabled={isLoading}>
-                  Create
+                  Send
                 </Button>
               </DialogFooter>
             </div>

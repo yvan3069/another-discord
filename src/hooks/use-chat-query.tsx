@@ -23,7 +23,7 @@ export function useChatQuery({
       url: apiUrl,
       query: {
         cursor: pageParam,
-        //channelId
+        //channelId or conversationId
         [paramKey]: paramValue,
       },
     });

@@ -13,7 +13,11 @@ async function ChannelIdPage({ params }: ChannelIdPageProps) {
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <Suspense fallback={<ChannelPageDefalut />}>
-        <ChatContent serverId={params.serverId} channelId={params.channelId} />
+        <ChatContent
+          serverId={params.serverId}
+          channelId={params.channelId}
+          type="channel"
+        />
       </Suspense>
     </div>
   );

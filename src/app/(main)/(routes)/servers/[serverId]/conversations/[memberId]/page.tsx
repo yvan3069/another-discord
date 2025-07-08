@@ -3,6 +3,9 @@ import { currentProfile } from "@/lib/current-profile";
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import { Suspense } from "react";
+import { ChannelPageDefalut } from "@/components/loading/channel-page-default";
+import ChatContent from "@/components/chat/chat-content";
 import ChatHeader from "@/components/chat/chat-header";
 
 interface MemberIdPageProps {
@@ -48,13 +51,14 @@ async function MemberIdPage({ params }: MemberIdPageProps) {
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      <ChatHeader
-        imageUrl={otherMember.profile.imageUrl}
-        name={otherMember.profile.name}
-        serverId={params.serverId}
-        type="conversation"
-        profile={profile}
-      />
+      <Suspense fallback={<ChannelPageDefalut />}>
+        <ChatContent
+          serverId={params.serverId}
+          conversationId={conversation.id}
+          type="conversation"
+          otherMember={otherMember}
+        />
+      </Suspense>
     </div>
   );
 }

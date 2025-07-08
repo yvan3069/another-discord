@@ -48,11 +48,11 @@ export function useChatSocket({
             }),
           };
         });
-        console.log("newData", newData);
-        console.log("return value", {
-          ...oldData,
-          pages: newData,
-        });
+        // console.log("newData", newData);
+        // console.log("return value", {
+        //   ...oldData,
+        //   pages: newData,
+        // });
         return {
           ...oldData,
           pages: newData,

@@ -15,7 +15,7 @@ import EmojiPicker from "../emojiPicker";
 interface ChatInputPros {
   apiUrl: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query: Record<string, any>;
+  query: Record<string, string>;
   name: string;
   type: "conversation" | "channel";
 }
@@ -23,6 +23,7 @@ interface ChatInputPros {
 const formSchema = z.object({
   content: z.string().min(1),
 });
+//TODO: if type === "channel", apiUrl === ".../messages"; if type === "conversation" apiUrl === "../directMessages";
 
 function ChatInput({ apiUrl, query, name, type }: ChatInputPros) {
   const form = useForm<z.infer<typeof formSchema>>({
