@@ -111,7 +111,12 @@ function InviteModal() {
               readOnly
               disabled={isLoading}
             />
-            <Button size="icon" onClick={() => onCopy()} disabled={isLoading}>
+            <Button
+              size="icon"
+              className="bg-indigo-500 hover:bg-indigo-400/80 dark:bg-indigo-100/80 hover:dark:bg-indigo-50"
+              onClick={() => onCopy()}
+              disabled={isLoading}
+            >
               {copied ? (
                 <Check className="w-4 h-4" />
               ) : (

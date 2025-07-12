@@ -4,6 +4,8 @@
 import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "@/store/store";
+
+//TODO: 可以考虑动态引入，也许会提高打包效率
 import CreateServerModal from "@/components/modals/createServerModal";
 import InviteModal from "@/components/modals/inviteModal";
 import EditServerModal from "@/components/modals/editServerModal";

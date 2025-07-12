@@ -37,10 +37,14 @@ async function MemberIdPage({ params }: MemberIdPageProps) {
   if (!currentMember) {
     return redirect("/");
   }
+
+  //TODO: converastion page loading slowly
+  console.time("ConversationPage: getOrCreateConversation");
   const conversation = await getOrCreateConversation(
     currentMember.id,
     params.memberId
   );
+  console.timeEnd("ConversationPage: getOrCreateConversation");
 
   if (!conversation) {
     return redirect(`/servers/${params.serverId}`);

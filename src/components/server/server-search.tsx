@@ -3,15 +3,12 @@
 import { Search } from "lucide-react";
 
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { useEffect, useState } from "react";
 import { DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
@@ -49,13 +46,13 @@ function ServerSearch({ data }: ServerSearchProps) {
   function onClick(id: string, type: "channel" | "member") {
     if (type === "channel") {
       setOpen((open) => !open);
-
-      router.push(`/server/${params.serverId}/channel/${id}`);
+      //TODO: if parmas is null
+      router.push(`/server/${params?.serverId}/channel/${id}`);
       //console.log(`/server/${params.serverId}/channel/${id}`);
     }
     if (type === "member") {
       setOpen((open) => !open);
-      router.push(`/server/${params.serverId}/member/${id}`);
+      router.push(`/server/${params?.serverId}/member/${id}`);
       //console.log(`/server/${params.serverId}/member/${id}`);
     }
   }

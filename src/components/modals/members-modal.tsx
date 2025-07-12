@@ -149,6 +149,7 @@ function MembersModal() {
                       </p>
                     </div>
                     {/* TODO: 在header和在section触发，header的dropdown正常工作但是section不能 */}
+                    {/* TODO: firfox触发多次 */}
                     {server.profileId !== member.profileId &&
                       loadingId !== member.id && (
                         <div className="ml-auto">

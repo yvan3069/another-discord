@@ -7,7 +7,8 @@ import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import ChatMessages from "./chat-messages";
-import { Member, Profile } from "@prisma/client";
+import { ChannelType, Member, Profile } from "@prisma/client";
+import MediaRoom from "../media-room";
 
 type MemberWithProfiles = Member & {
   profile: Profile;
@@ -26,7 +27,7 @@ type ChatContentProps =
       conversationId: string;
       otherMember: MemberWithProfiles;
     };
-
+//TODO: considering rebuild the chat-content page
 async function ChatContent(props: ChatContentProps) {
   const profile = await currentProfile();
   //   const { serverId, channelId } = params;
@@ -66,29 +67,39 @@ async function ChatContent(props: ChatContentProps) {
             profile={profile}
           />
         </Suspense>
-        <ChatMessages
-          member={member}
-          name={channel.name}
-          chatId={channelId}
-          type="channel"
-          socketUrl="/api/socket/messages"
-          apiUrl="/api/messages"
-          socketQuery={{
-            channelId: channelId,
-            serverId: serverId,
-          }}
-          paramKey="channelId"
-          paramValue={channelId}
-        />
-        <ChatInput
-          name={channel.name}
-          type="channel"
-          apiUrl="/api/socket/messages"
-          query={{
-            channelId: channelId,
-            serverId: serverId,
-          }}
-        />
+        {channel.type === ChannelType.TEXT && (
+          <>
+            <ChatMessages
+              member={member}
+              name={channel.name}
+              chatId={channelId}
+              type="channel"
+              socketUrl="/api/socket/messages"
+              apiUrl="/api/messages"
+              socketQuery={{
+                channelId: channelId,
+                serverId: serverId,
+              }}
+              paramKey="channelId"
+              paramValue={channelId}
+            />
+            <ChatInput
+              name={channel.name}
+              type="channel"
+              apiUrl="/api/socket/messages"
+              query={{
+                channelId: channelId,
+                serverId: serverId,
+              }}
+            />
+          </>
+        )}
+        {channel.type === ChannelType.AUDIO && (
+          <MediaRoom chatId={channel.id} video={false} audio={true} />
+        )}
+        {channel.type === ChannelType.VIDEO && (
+          <MediaRoom chatId={channel.id} video={true} audio={true} />
+        )}
       </>
     );
   }
@@ -121,8 +132,6 @@ async function ChatContent(props: ChatContentProps) {
             imageUrl={otherMember.profile.imageUrl}
           />
         </Suspense>
-        {/*TODO: change the url where message send to. */}
-        {/*TODO: 检查所有directMessage 的console.log 和传参 */}
         <ChatMessages
           member={member}
           name={otherMember.profile.name}

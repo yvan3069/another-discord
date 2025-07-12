@@ -3,20 +3,21 @@ import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
 import NavigationSidebar from "./navigation/navigationSidebar";
 import ServerSidebar from "./server/server-sidebar";
-import { ServerWithMembersWithProfiles } from "@/type";
-import { Profile, Channel } from "@prisma/client";
+import { Profile } from "@prisma/client";
+import { Suspense } from "react";
+import ServerSidebarDefault from "./loading/server-sidebar-default";
 
 // with member with profiles with channels
-interface ServerWithDetails extends ServerWithMembersWithProfiles {
-  channels: Channel[];
-}
+// interface ServerWithDetails extends ServerWithMembersWithProfiles {
+//   channels: Channel[];
+// }
 
 interface MobileToggleProps {
-  server: ServerWithDetails;
+  serverId: string;
   profile: Profile;
 }
 
-function MobileToggle({ server, profile }: MobileToggleProps) {
+function MobileToggle({ serverId, profile }: MobileToggleProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -27,10 +28,11 @@ function MobileToggle({ server, profile }: MobileToggleProps) {
       {/* <DialogTitle className="hidden">serverside bar</DialogTitle> */}
       <SheetContent side="left" className="p-0 flex gap-0">
         <div className="w-[72px]">
-          {/*TODO 解决navigation下拉框和sheetdialog取消键重合的问题 */}
           <NavigationSidebar />
         </div>
-        <ServerSidebar server={server} profile={profile} />
+        <Suspense fallback={<ServerSidebarDefault />}>
+          <ServerSidebar serverId={serverId} profile={profile} mode="mobile" />
+        </Suspense>
       </SheetContent>
     </Sheet>
   );

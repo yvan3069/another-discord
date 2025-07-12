@@ -79,7 +79,7 @@ function MessageFileModal() {
       dispatch(onClose());
       //for test
       router.refresh();
-      window.location.reload();
+      //window.location.reload();
     } catch (err) {
       console.error(err);
     }

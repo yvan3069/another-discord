@@ -14,8 +14,6 @@ interface FileUploadProps {
 }
 
 function FileUpload({ onChange, value, endpoint }: FileUploadProps) {
-  // TODO: 判断类型是否为图片/pdf，如果是图片的话，则
-
   const [isImage, setIsImage] = useState<boolean | null>(null);
 
   useEffect(() => {

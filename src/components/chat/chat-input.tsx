@@ -23,7 +23,6 @@ interface ChatInputPros {
 const formSchema = z.object({
   content: z.string().min(1),
 });
-//TODO: if type === "channel", apiUrl === ".../messages"; if type === "conversation" apiUrl === "../directMessages";
 
 function ChatInput({ apiUrl, query, name, type }: ChatInputPros) {
   const form = useForm<z.infer<typeof formSchema>>({

@@ -1,9 +1,8 @@
 import { RedirectToSignIn } from "@clerk/nextjs";
-import { Channel, ChannelType, MemberRole, Profile } from "@prisma/client";
+import { ChannelType, MemberRole, Profile } from "@prisma/client";
 
 import { redirect } from "next/navigation";
 import ServerHeader from "./server-header";
-import { ServerWithMembersWithProfiles } from "@/type";
 import { ScrollArea } from "../ui/scroll-area";
 import ServerSearch from "./server-search";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
@@ -11,15 +10,18 @@ import { Separator } from "../ui/separator";
 import ServerSection from "./server-section";
 import ServerChannel from "./server-channel";
 import ServerMember from "./server-member";
+import db from "@/lib/db";
 
-// with member with profiles with channels
-interface ServerWithDetails extends ServerWithMembersWithProfiles {
-  channels: Channel[];
-}
+// // with member with profiles with channels
+// interface ServerWithDetails extends ServerWithMembersWithProfiles {
+//   channels: Channel[];
+// }
 
 interface ServerSidebarProps {
-  server: ServerWithDetails;
+  //server: ServerWithDetails;
+  serverId: string;
   profile: Profile;
+  mode?: "mobile" | "desktop";
 }
 
 const iconMap = {
@@ -36,9 +38,32 @@ const roleIconMap = {
   [MemberRole.ADMIN]: <ShieldAlert className="h-4 w-4 mr-2 text-indigo-500" />,
 };
 
-async function ServerSidebar({ server, profile }: ServerSidebarProps) {
-  // TODO 为什么在layout和sidebar都有一次fetch servers?
+async function ServerSidebar({ serverId, profile, mode }: ServerSidebarProps) {
   console.time("ServerSidebar: Total Execution");
+
+  console.time("ServerIdLayout: db.server.findUnique"); // 开始计时: 数据库查询
+
+  const server = await db.server.findUnique({
+    where: {
+      id: serverId,
+    },
+    include: {
+      channels: {
+        orderBy: {
+          name: "asc", // Replace 'name' with a valid field in the 'channels' table
+        },
+      },
+      members: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
+    },
+  });
+  console.timeEnd("ServerIdLayout: db.server.findUnique"); // 结束计时: 数据库查询
 
   // console.time("ServerSidebar: currentProfile");
   // const profile = await currentProfile();
@@ -52,6 +77,20 @@ async function ServerSidebar({ server, profile }: ServerSidebarProps) {
   if (!server) {
     console.timeEnd("ServerSidebar: Total Execution");
     return redirect("/");
+  }
+
+  const isMember = server.members.some(
+    (member) => member.profileId === profile.id
+  );
+  if (!isMember) {
+    // 如果不希望非成员看到任何内容，或者没有权限访问这个 serverId，则重定向
+    // 这个逻辑取决于你的业务需求。如果 ServerIdLayout 应该只对成员可见，
+    // 那么这个检查是必要的。
+    console.warn(
+      `User ${profile.id} is not a member of server ${server.id}. Redirecting.`
+    );
+    console.timeEnd("ServerIdLayout: Total Execution");
+    return redirect("/"); // 或者抛出一个错误，或者显示一个“无权限”页面
   }
 
   const textChannels = server?.channels.filter(
@@ -71,7 +110,7 @@ async function ServerSidebar({ server, profile }: ServerSidebarProps) {
   const renderStart = performance.now();
   const result = (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      <ServerHeader server={server} role={role} />
+      <ServerHeader server={server} role={role} mode={mode} />
       <ScrollArea className=" flex-1 px-3">
         <div className="mt-2">
           <ServerSearch

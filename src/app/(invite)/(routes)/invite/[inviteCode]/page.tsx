@@ -3,6 +3,9 @@ import db from "@/lib/db";
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
+import AcceptPageContent from "./AcceptPageContent";
+import RedirectCountdown from "./RedirectCountdown";
+
 interface InviteCodeParams {
   params: {
     inviteCode: string;
@@ -27,23 +30,13 @@ async function InviteCodePage({ params }: InviteCodeParams) {
     },
   });
   if (existServer) {
-    return redirect(`/servers/${existServer.id}`);
+    return <RedirectCountdown serverId={existServer.id} />;
   }
-  const server = await db.server.update({
-    where: {
-      inviteCode: inviteCode,
-    },
-    data: {
-      members: {
-        create: [{ profileId: profile.id }],
-      },
-    },
-  });
-  if (server) {
-    return redirect(`/servers/${server.id}`);
-  }
-  // TODO: 增加确认接受邀请界面。
-  return <div>this is a invite page</div>;
+
+  // TODO: 绘制确认接受邀请界面。
+  // TODO: 如何显示在线人数？ create a table, online add, offline decrease, maybe using heartbeat
+  //TODO: 也许已读和未读也可以用这样显示。
+  return <AcceptPageContent inviteCode={inviteCode} />;
 }
 
 export default InviteCodePage;

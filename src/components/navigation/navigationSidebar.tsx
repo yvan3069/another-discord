@@ -9,11 +9,14 @@ import { ModeToggle } from "../mode-toggle";
 import { UserButton } from "@clerk/nextjs";
 
 async function NavigationSidebar() {
+  console.time("NavigationSidebar: currentProfile");
   const profile = await currentProfile();
   if (!profile) {
     return redirect("/");
   }
+  console.timeEnd("NavigationSidebar: currentProfile");
 
+  console.time("NavigationSidebar: db.server.findMany");
   const servers = await db.server.findMany({
     where: {
       members: {
@@ -23,6 +26,7 @@ async function NavigationSidebar() {
       },
     },
   });
+  console.timeEnd("NavigationSidebar: db.server.findMany");
 
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full bg-[#E3E5E8] dark:bg-[#1E1F22] py-3">
