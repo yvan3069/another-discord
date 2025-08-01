@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -H 0.0.0.0",
+    "lint": "next lint",
+    "create-docker-image": "docker build -t discord-docker .",
+    "save-docker-image": "docker save -o landing-page-boilerplate.tar landing-page-boilerplate",
+    "docker": "npm run build && npm run postbuild && npm run create-docker-image && npm run save-docker-image"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.12",
