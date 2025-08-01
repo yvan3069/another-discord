@@ -24,6 +24,7 @@ export function useChatScroll({
         loadMore();
       }
     }
+    //TODO:也许会有性能问题
     topDiv?.addEventListener("scroll", handleScroll);
 
     return () => {

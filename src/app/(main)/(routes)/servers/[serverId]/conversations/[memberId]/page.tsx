@@ -6,7 +6,6 @@ import db from "@/lib/db";
 import { Suspense } from "react";
 import { ChannelPageDefalut } from "@/components/loading/channel-page-default";
 import ChatContent from "@/components/chat/chat-content";
-import ChatHeader from "@/components/chat/chat-header";
 
 interface MemberIdPageProps {
   params: {
