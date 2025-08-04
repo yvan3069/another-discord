@@ -84,7 +84,11 @@ export default async function handler(
     const addKey = `chat:${channelId}:messages`;
 
     console.log(addKey, "emitted by index.ts");
-    res?.socket?.server?.io.emit(addKey, message);
+    if (res?.socket?.server?.io) {
+      res.socket.server.io.emit(addKey, message);
+    } else if (typeof io !== "undefined") {
+      io.emit(addKey, message);
+    }
 
     return res.status(200).json(message);
   } catch (err) {

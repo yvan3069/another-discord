@@ -66,7 +66,11 @@ export default async function handler(
     const addKey = `chat:${conversationId}:messages`;
 
     console.log(addKey, "emitted by index.ts");
-    res?.socket?.server?.io.emit(addKey, directMessage);
+    if (res?.socket?.server?.io) {
+      res.socket.server.io.emit(addKey, directMessage);
+    } else if (typeof io !== "undefined") {
+      io.emit(addKey, directMessage);
+    }
 
     return res.status(200).json(directMessage);
   } catch (err) {

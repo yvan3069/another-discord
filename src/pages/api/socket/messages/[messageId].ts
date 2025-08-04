@@ -136,7 +136,12 @@ export default async function handler(
 
     const updateKey = `chat:${channelId}:messages:update`;
     console.log("update message!", updateKey);
-    res?.socket?.server?.io?.emit(updateKey, message);
+
+    if (res?.socket?.server?.io) {
+      res.socket.server.io.emit(updateKey, message);
+    } else if (typeof io !== "undefined") {
+      io.emit(updateKey, message);
+    }
 
     return res.status(200).json(message);
   } catch (err) {

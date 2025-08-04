@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 0.0.0.0",
+    "start": "node server.js",
     "lint": "next lint",
     "create-docker-image": "docker build -t discord-docker .",
     "save-docker-image": "docker save -o landing-page-boilerplate.tar landing-page-boilerplate",
