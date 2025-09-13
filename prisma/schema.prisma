@@ -9,16 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider  = "sqlite"
   url       = env("DATABASE_URL")
-  //directUrl = env("DIRECT_URL")
 }
 model Profile {
   id String @id @default(uuid())
   userId String @unique
   name String
-  imageUrl String @db.Text
-  email String @db.Text
+  imageUrl String 
+  email String 
 
   servers Server[]
   members Member[]
@@ -31,7 +30,7 @@ model Profile {
 model Server {
   id String @id @default(uuid())
   name String
-  imageUrl String @db.Text
+  imageUrl String 
   inviteCode String @unique
 
   profileId String
@@ -100,9 +99,9 @@ model Channel {
 }
 model Message {
   id String @id @default(uuid())
-  content String @db.Text
+  content String 
 
-  fileUrl String? @db.Text
+  fileUrl String?
 
   memberId String
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
@@ -136,9 +135,8 @@ model Conversation {
 
 model DirectMessage {
   id String @id @default(uuid())
-  content String @db.Text
-  fileUrl String? @db.Text
-
+  content String 
+  fileUrl String? 
   memberId String
   member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 

@@ -13,6 +13,11 @@ const setupSocketServer = (httpServer) => {
     const io = new ServerIo(httpServer, {
       path: "/api/socket/io",
       addTrailingSlash: false,
+      cors: {
+        origin: "https://oops-cord.site", // 正式域名
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
     });
     global.io = io;
   }
