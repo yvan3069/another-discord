@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,9 +7,15 @@ import Image from "next/image";
 
 interface PageContentProps {
   inviteCode: string;
+  serverInfo: {
+    name: string;
+    imgUrl: string;
+    onlineNumber?: number | string;
+    totalNumber?: number | string;
+  };
 }
 
-function AcceptPageContent({ inviteCode }: PageContentProps) {
+function AcceptPageContent({ inviteCode, serverInfo }: PageContentProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [getError, setGetError] = useState(false);
@@ -41,8 +46,8 @@ function AcceptPageContent({ inviteCode }: PageContentProps) {
           </p>
           <div className="flex items-center justify-between gap-16">
             <Image
-              src="https://cdn.discordapp.com/embed/avatars/0.png?size=128"
-              alt="Discord"
+              src={serverInfo.imgUrl}
+              alt="serverInfo image"
               width={56}
               height={56}
               className="h-14 w-14 rounded-xl"
@@ -54,10 +59,10 @@ function AcceptPageContent({ inviteCode }: PageContentProps) {
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://discord.com"
+                href="https://oops-cord.site"
               >
                 <h1 className="cursor-pointer font-normal text-[#060607] hover:underline dark:text-white">
-                  Discord
+                  {serverInfo.name}
                 </h1>
               </a>
               <div className="flex items-center justify-between gap-3 text-xs">
@@ -65,7 +70,7 @@ function AcceptPageContent({ inviteCode }: PageContentProps) {
                   <span className="inline-flex">
                     <svg
                       className="h-[0.6rem] w-[0.6rem] fill-indigo-500"
-                      stroke-width="0"
+                      strokeWidth="0"
                       viewBox="0 0 512 512"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -78,14 +83,14 @@ function AcceptPageContent({ inviteCode }: PageContentProps) {
                   <span className="inline-flex">
                     <svg
                       className="h-[0.6rem] w-[0.6rem] fill-[#b5bac1] dark:fill-[#4e5058]"
-                      stroke-width="0"
+                      strokeWidth="0"
                       viewBox="0 0 512 512"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M256 23.05C127.5 23.05 23.05 127.5 23.05 256S127.5 488.9 256 488.9 488.9 384.5 488.9 256 384.5 23.05 256 23.05z"></path>
                     </svg>
                   </span>
-                  3,632 Members
+                  {serverInfo?.totalNumber} Members
                 </p>
               </div>
             </div>
