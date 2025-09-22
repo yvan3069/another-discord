@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface PageContentProps {
@@ -10,8 +10,8 @@ interface PageContentProps {
   serverInfo: {
     name: string;
     imgUrl: string;
-    onlineNumber?: number | string;
     totalNumber?: number | string;
+    serverId: string;
   };
 }
 
@@ -19,6 +19,7 @@ function AcceptPageContent({ inviteCode, serverInfo }: PageContentProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [getError, setGetError] = useState(false);
+  const [onlineUser, setOnlineUser] = useState<null | number>(null);
   async function onAgree() {
     try {
       setIsLoading(true);
@@ -35,6 +36,18 @@ function AcceptPageContent({ inviteCode, serverInfo }: PageContentProps) {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    async function run() {
+      const res = await axios.get(
+        `/api/servers/${serverInfo.serverId}/online-number`
+      );
+      if (res.statusText === "OK") {
+        setOnlineUser(res.data.onlineUserCount);
+      }
+    }
+    run();
+  }, [serverInfo.serverId]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-b from-[#19175a] to-[#5865F2]">
@@ -56,11 +69,7 @@ function AcceptPageContent({ inviteCode, serverInfo }: PageContentProps) {
             />
 
             <div>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://oops-cord.site"
-              >
+              <a target="_blank" rel="noopener noreferrer">
                 <h1 className="cursor-pointer font-normal text-[#060607] hover:underline dark:text-white">
                   {serverInfo.name}
                 </h1>
@@ -77,7 +86,7 @@ function AcceptPageContent({ inviteCode, serverInfo }: PageContentProps) {
                       <path d="M256 23.05C127.5 23.05 23.05 127.5 23.05 256S127.5 488.9 256 488.9 488.9 384.5 488.9 256 384.5 23.05 256 23.05z"></path>
                     </svg>
                   </span>
-                  560 Online
+                  {onlineUser || "loading..."} Online
                 </p>
                 <p className="text-[#80848e]">
                   <span className="inline-flex">

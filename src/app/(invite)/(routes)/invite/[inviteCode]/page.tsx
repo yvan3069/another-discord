@@ -52,6 +52,7 @@ async function InviteCodePage({ params }: InviteCodeParams) {
     name: targetServer.name,
     imgUrl: targetServer.imageUrl,
     totalNumber: targetServer._count.members,
+    serverId: targetServer.id,
   };
   return <AcceptPageContent inviteCode={inviteCode} serverInfo={serverInfo} />;
 }

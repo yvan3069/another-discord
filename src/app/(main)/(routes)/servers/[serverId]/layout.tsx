@@ -4,6 +4,7 @@ import { RedirectToSignIn } from "@clerk/nextjs";
 import ServerSidebar from "@/components/server/server-sidebar";
 import { Suspense } from "react";
 import ServerSidebarDefault from "@/components/loading/server-sidebar-default";
+import OnlineTracker from "@/components/onlineTracker";
 
 async function ServerIdLayout({
   children,
@@ -29,6 +30,7 @@ async function ServerIdLayout({
         </Suspense>
       </div>
       <main className="h-full md:pl-60">{children}</main>
+      <OnlineTracker serverId={params.serverId} />
     </div>
   );
   const layoutRenderEnd = performance.now();
